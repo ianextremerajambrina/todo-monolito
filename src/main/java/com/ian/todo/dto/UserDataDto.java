@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class UserDataDto {
 
+    private String userName;
     private String fullName;
     private List<Task> tasks;
 

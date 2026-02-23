@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
-    private TaskService taskService;
+    private final TaskService taskService;
 
     @Autowired
     TaskController(TaskService taskService) {
@@ -38,7 +38,6 @@ public class TaskController {
 
     @DeleteMapping("{taskId}")
     public void delete(@PathVariable Long taskId) throws ItemNotFound {
-
         this.taskService.delete(taskId);
 
     }

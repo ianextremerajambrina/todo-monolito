@@ -36,7 +36,9 @@ public class UserService {
 
         if (dbUser.isPresent()) {
 
-            UserDataDto user = new UserDataDto(
+            UserDataDto user;
+            user = new UserDataDto(
+                    dbUser.get().getUserName(),
                     dbUser.get().getFullName(),
                     dbUser.get().getTasks()
             );
@@ -51,21 +53,28 @@ public class UserService {
     public UserDataDto update(Long id, UpdateUserDataDto request) throws ItemNotFound {
 
         Optional<User> dbUser = this.repository.findById(id);
+        UpdateUserDataDto user;
 
         if (dbUser.isPresent()) {
 
-            UpdateUserDataDto user = new UpdateUserDataDto(
-                    dbUser.get().getUserName(),
-                    dbUser.get().getPassword(),
-                    dbUser.get().getFullName()
+            user = new UpdateUserDataDto(
+                    request.getUserName(),
+                    request.getPassword(),
+                    request.getFullName()
             );
 
+            this.repository.update(id, user);
 
         } else {
             throw new ItemNotFound("User to update not found");
         }
 
-        return null;
+        return new UserDataDto(
+                dbUser.get().getUserName(),
+                dbUser.get().getFullName(),
+                dbUser.get().getTasks()
+        );
+
     }
 
     public void delete(Long id) throws ItemNotFound {
@@ -79,6 +88,8 @@ public class UserService {
     }
 
     public void create(CreateUserDto user) {
+
+        List<Task> tasks = List.of();
 
         User dbUser = new User(
                 user.getUserName(),

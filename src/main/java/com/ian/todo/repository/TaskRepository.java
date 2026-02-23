@@ -19,6 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("UPDATE Task t SET t.title = :#{#task.title}, t.description = :#{#task.description} WHERE t.id = :id")
     void update(Long id, TaskDataDto task);
 
+    // TODO: Es esto lo mismo a findByReference ya incluido??
     @Query("SELECT t FROM Task t WHERE t.author.id = :authorId")
     List<Task> findByAuthorId(Long authorId);
 

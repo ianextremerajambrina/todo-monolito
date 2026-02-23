@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     UserController(UserService userService) {
@@ -30,6 +30,7 @@ public class UserController {
         List<Task> tasks = List.of();
 
         UserDataDto user = new UserDataDto(
+                request.getUserName(),
                 request.getFullName(),
                 tasks
         );
@@ -46,10 +47,8 @@ public class UserController {
     }
 
     @PutMapping("{userId}")
-    public ResponseEntity<UserDataDto> modify(@PathVariable Long userId, @RequestBody UpdateUserDataDto request) throws ItemNotFound {
-        this.userService.update(userId, request);
-        // TODO: Implementar funcion
-        return null;
+    public ResponseEntity<UserDataDto> update(@PathVariable Long userId, @RequestBody UpdateUserDataDto request) throws ItemNotFound {
+        return ResponseEntity.ok(this.userService.update(userId, request));
     }
 
     @DeleteMapping("{userId}")

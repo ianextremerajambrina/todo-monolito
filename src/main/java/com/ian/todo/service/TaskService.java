@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,6 +83,9 @@ public class TaskService {
 
     public List<TaskDataDto> findByAuthorId(Long authorId) throws ItemNotFound {
         List<Task> dbTasks = repository.findByAuthorId(authorId);
+
+        // TODO: Verificar si podemos hacer lo mismo con getReferenceById
+        // ?? List<Task> dbTasks2 = Collections.singletonList(repository.getReferenceById(authorId));
 
         if (dbTasks.isEmpty()) {
             throw new ItemNotFound("Tasks not found for the specified author");
