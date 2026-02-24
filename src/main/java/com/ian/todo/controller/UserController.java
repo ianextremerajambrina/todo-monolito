@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -27,7 +28,7 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<UserDataDto> create(@RequestBody CreateUserDto request) {
-        List<Task> tasks = List.of();
+        Set<Task> tasks = Set.of();
 
         UserDataDto user = new UserDataDto(
                 request.getUserName(),

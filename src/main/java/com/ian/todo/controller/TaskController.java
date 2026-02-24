@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/tasks")
@@ -21,14 +23,24 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("{authorId}")
-    public ResponseEntity<List<TaskDataDto>> findAll(@PathVariable Long authorId) throws ItemNotFound {
+    @GetMapping("")
+    public ResponseEntity<List<TaskDataDto>> findAll() throws ItemNotFound{
+        return ResponseEntity.ok(taskService.findAll());
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<Set<TaskDataDto>> findByAuthorId(@PathVariable Long authorId) throws ItemNotFound {
         return ResponseEntity.ok(taskService.findByAuthorId(authorId));
     }
 
-    @PostMapping("{taskId}")
+    @GetMapping("{taskId}")
     public ResponseEntity<TaskDataDto> find(@PathVariable Long taskId) throws ItemNotFound {
         return ResponseEntity.ok(this.taskService.findById(taskId));
+    }
+
+    @PostMapping()
+    public ResponseEntity<TaskDataDto> create(@RequestBody TaskDataDto request) throws SQLException {
+        return ResponseEntity.ok(this.taskService.create(request));
     }
 
     @PutMapping("{taskId}")

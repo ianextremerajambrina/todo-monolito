@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -21,6 +22,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // TODO: Es esto lo mismo a findByReference ya incluido??
     @Query("SELECT t FROM Task t WHERE t.author.id = :authorId")
-    List<Task> findByAuthorId(Long authorId);
+    Set<Task> findByAuthorId(Long authorId);
 
 }

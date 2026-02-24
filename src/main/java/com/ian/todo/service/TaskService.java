@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +26,20 @@ public class TaskService {
         this.repository = repository;
     }
 
-    public List<Task> findAll() {
-        return repository.findAll();
+    public List<TaskDataDto> findAll(){
+        List<Task> dbTasks = repository.findAll();
+
+        if (dbTasks.isEmpty()) {
+            ResponseEntity.notFound();
+        }
+
+        return dbTasks.stream().map(t -> new TaskDataDto(
+                t.getTitle(),
+                t.getDescription(),
+                t.getStatus(),
+                t.getAuthor()
+        )).toList();
+
     }
 
     public TaskDataDto findById(Long id) throws ItemNotFound {
@@ -81,11 +95,11 @@ public class TaskService {
         }
     }
 
-    public List<TaskDataDto> findByAuthorId(Long authorId) throws ItemNotFound {
-        List<Task> dbTasks = repository.findByAuthorId(authorId);
+    public Set<TaskDataDto> findByAuthorId(Long authorId) throws ItemNotFound {
+        Set<Task> dbTasks = repository.findByAuthorId(authorId);
 
         // TODO: Verificar si podemos hacer lo mismo con getReferenceById
-        // ?? List<Task> dbTasks2 = Collections.singletonList(repository.getReferenceById(authorId));
+        // ?? Set<Task> dbTasks2 = Collections.singletonList(repository.getReferenceById(authorId));
 
         if (dbTasks.isEmpty()) {
             throw new ItemNotFound("Tasks not found for the specified author");
@@ -96,10 +110,24 @@ public class TaskService {
                     t.getDescription(),
                     t.getStatus(),
                     t.getAuthor()
-            )).collect(Collectors.toList());
+            )).collect(Collectors.toSet());
 
         }
 
     }
 
+    public TaskDataDto create(TaskDataDto request) throws SQLException {
+        Task task = new Task(
+                request.getTitle(),
+                request.getDescription(),
+                request.getAuthor()
+        );
+        try {
+            this.repository.save(task);
+        } catch (Exception e) {
+            throw new SQLException("it was not possible to create the task, try again later");
+        }
+
+        return request;
+    }
 }
