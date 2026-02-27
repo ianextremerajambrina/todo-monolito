@@ -4,10 +4,12 @@ import com.ian.todo.dto.CreateUserDto;
 import com.ian.todo.dto.TaskDataDto;
 import com.ian.todo.dto.UpdateUserDataDto;
 import com.ian.todo.dto.UserDataDto;
+import com.ian.todo.exception.InsertItemError;
 import com.ian.todo.exception.ItemNotFound;
 import com.ian.todo.model.Task;
 import com.ian.todo.model.User;
 import com.ian.todo.repository.UserRepository;
+import jakarta.websocket.MessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -87,17 +89,24 @@ public class UserService {
         }
     }
 
-    public void create(CreateUserDto user) {
+    public UserDataDto create(CreateUserDto user) throws InsertItemError {
 
-        List<Task> tasks = List.of();
+        User dbUser;
 
-        User dbUser = new User(
-                user.getUserName(),
-                user.getPassword()
-        );
+        try
+        {
+            dbUser = this.repository.save(new User(
+                    user.getUserName(),
+                    user.getPassword()
+            ));
+
+        } catch (Exception e) {
+            throw new InsertItemError("Could not insert item in database");
+        }
 
 
-        this.repository.save(dbUser);
+        return new UserDataDto(
+                dbUser.getUserName());
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ian.todo.service;
 
 import com.ian.todo.dto.TaskDataDto;
+import com.ian.todo.exception.InsertItemError;
 import com.ian.todo.exception.ItemNotFound;
 import com.ian.todo.model.Task;
 import com.ian.todo.repository.TaskRepository;
@@ -116,7 +117,7 @@ public class TaskService {
 
     }
 
-    public TaskDataDto create(TaskDataDto request) throws SQLException {
+    public TaskDataDto create(TaskDataDto request) throws InsertItemError {
         Task task = new Task(
                 request.getTitle(),
                 request.getDescription(),
@@ -125,7 +126,7 @@ public class TaskService {
         try {
             this.repository.save(task);
         } catch (Exception e) {
-            throw new SQLException("it was not possible to create the task, try again later");
+            throw new InsertItemError("Could not insert item in databaase");
         }
 
         return request;

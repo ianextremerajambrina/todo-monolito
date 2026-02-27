@@ -1,11 +1,13 @@
 package com.ian.todo.exception;
 
-public class ItemNotFound extends Exception {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-    public final String message;
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ItemNotFound extends RuntimeException {
 
     public ItemNotFound(String message) {
-        this.message = message;
+        super(message);
     }
 
 }

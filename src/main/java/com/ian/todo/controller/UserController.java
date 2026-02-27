@@ -5,14 +5,11 @@ import com.ian.todo.dto.UpdateUserDataDto;
 import com.ian.todo.dto.UserDataDto;
 import com.ian.todo.exception.ItemNotFound;
 import com.ian.todo.model.Task;
-import com.ian.todo.model.User;
 import com.ian.todo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -53,8 +50,9 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
-    public void delete(@PathVariable Long userId) throws ItemNotFound {
+    public ResponseEntity.HeadersBuilder<?> delete(@PathVariable Long userId) throws ItemNotFound {
         this.userService.delete(userId);
+        return ResponseEntity.noContent();
     }
 
 }

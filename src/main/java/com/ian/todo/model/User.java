@@ -35,7 +35,7 @@ public class User {
     @NotBlank(message = "Full name is mandatory")
     @NotEmpty(message = "Full name is mandatory")
     private String fullName;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Task> tasks = new HashSet<>();
 
     public User(String userName, String password) {
