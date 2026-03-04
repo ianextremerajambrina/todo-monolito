@@ -51,4 +51,9 @@ public class Task {
         this.dueDate = Date.valueOf(LocalDate.now());
     }
 
+    public Task(String title, String description, Long author) {
+        this.title = title;
+        this.description = description;
+        this.author = author;
+    }
 }

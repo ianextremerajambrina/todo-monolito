@@ -7,11 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmail(String email);
 
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.userName = :#{#user.userName}, u.password = :#{#user.password}, u.fullName = :#{#user.fullName} WHERE u.id = :id")
-    public void update(Long id, UpdateUserDataDto request);
+    @Query("UPDATE User u SET u.userName = :#{#user.userName}, u.email = :#{#user.email}, u.password = :#{#user.password}, u.fullName = :#{#user.fullName} WHERE u.id = :id")
+    public void update(Long id, UpdateUserDataDto user);
 
 }

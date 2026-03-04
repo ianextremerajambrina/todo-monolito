@@ -11,12 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
@@ -25,15 +22,23 @@ class TaskServiceTest {
     private TaskRepository taskRepository;
 
     @InjectMocks
-    private TaskService taskService; // tu capa de negocio
+    private TaskService taskService;
 
     @Test
-    void shouldCreateTask() throws SQLException {
-        Task task = new Task("Probando", "Nueva tarea", new User("mundocaotico", "1234"));
-        when(taskRepository.save(task)).thenReturn(task);
+    void shouldCreateTask() {
+        User user = new User("test@example.com", "mundocaotico", "1234");
+        
+        TaskDataDto taskDataDto = new TaskDataDto();
+        taskDataDto.setTitle("Probando");
+        taskDataDto.setDescription("Nueva tarea");
+        taskDataDto.setAuthor(user);
 
-        assertNotNull(task);
-        assertEquals("Probando", task.getTitle());
-        verify(taskRepository).save(task);
+        when(taskRepository.save(any(Task.class))).thenReturn(new Task("Probando", "Nueva tarea", user));
+
+        TaskDataDto result = taskService.create(taskDataDto);
+
+        assertNotNull(result);
+        assertEquals("Probando", result.getTitle());
+        verify(taskRepository).save(any(Task.class));
     }
 }

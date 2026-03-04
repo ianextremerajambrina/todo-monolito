@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,25 +22,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
+    @NotBlank(message = "Email is mandatory")
+    @NotEmpty(message = "Email is mandatory")
+    private String email;
     @Column()
-    @NotBlank(message = "Description is mandatory")
-    @NotEmpty(message = "Description is mandatory")
     private String userName;
     @Column()
     @NotBlank(message = "Password is mandatory")
     @NotEmpty(message = "Password is mandatory")
     private String password;
     @Column()
-    @NotBlank(message = "Full name is mandatory")
-    @NotEmpty(message = "Full name is mandatory")
     private String fullName;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Task> tasks = new HashSet<>();
 
-    public User(String userName, String password) {
+    public User(String email, String userName, String password) {
+        this.email = email;
         this.userName = userName;
         this.password = password;
-        this.fullName = userName;
+        this.fullName = userName != null ? userName.toLowerCase().trim() : email.split("@")[0];
     }
 
 }

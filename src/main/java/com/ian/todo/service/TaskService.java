@@ -110,7 +110,7 @@ public class TaskService {
                     t.getTitle(),
                     t.getDescription(),
                     t.getStatus(),
-                    t.getAuthor()
+                    t.getAuthor().getId()
             )).collect(Collectors.toSet());
 
         }

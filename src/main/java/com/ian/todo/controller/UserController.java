@@ -1,16 +1,14 @@
 package com.ian.todo.controller;
 
 import com.ian.todo.dto.CreateUserDto;
+import com.ian.todo.dto.LoginUserDto;
 import com.ian.todo.dto.UpdateUserDataDto;
 import com.ian.todo.dto.UserDataDto;
 import com.ian.todo.exception.ItemNotFound;
-import com.ian.todo.model.Task;
 import com.ian.todo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -25,23 +23,18 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<UserDataDto> create(@RequestBody CreateUserDto request) {
-        Set<Task> tasks = Set.of();
-
-        UserDataDto user = new UserDataDto(
-                request.getUserName(),
-                request.getFullName(),
-                tasks
-        );
-
-        this.userService.create(request);
-
+        UserDataDto user = this.userService.create(request);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("{userId}")
     public ResponseEntity<UserDataDto> find(@PathVariable Long userId) throws ItemNotFound {
         return ResponseEntity.ok(this.userService.findById(userId));
+    }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserDataDto> login(@RequestBody LoginUserDto request) throws ItemNotFound {
+        return ResponseEntity.ok(this.userService.login(request));
     }
 
     @PutMapping("{userId}")
